@@ -104,7 +104,6 @@ while True:
         
     for i in range(0, blocks_per_row):
         for j in range(0, len(block_colors)):
-            # supprime le seul block toucher et pas toute la rangée en sortant de la boucle
             if ball_y + ball_radius > j * (block_size + block_spacing) and ball_y + ball_radius < j * (block_size + block_spacing) + 20 and ball_x + ball_radius > i * (block_size + block_spacing) and ball_x - ball_radius < i * (block_size + block_spacing) + block_size:
                 ball_speed_y = -ball_speed_y
                 break
