@@ -1,4 +1,4 @@
-# BrickBreaker-F
+# BrickBreaker-FaceTrack
 
 <h2>IF NOT INSTALLED</h2>
 <hr>
