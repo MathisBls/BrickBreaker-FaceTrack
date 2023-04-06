@@ -155,9 +155,9 @@ while running:
             running = False
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
-                paddle_speed = -8
+                paddle_speed = -30
             elif event.key == pygame.K_RIGHT:
-                paddle_speed = 8
+                paddle_speed = 30
 
     if  controller == False:
         if x + w/2 < frame.shape[1]/2:
