@@ -1,3 +1,5 @@
+# -- coding: utf-8 --
+
 import pygame
 import random
 import cv2
@@ -150,15 +152,15 @@ while running:
             running = False
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
-                paddle_speed = -10
+                paddle_speed = -8
             elif event.key == pygame.K_RIGHT:
-                paddle_speed = 10
+                paddle_speed = 8
 
     if  controller == False:
         if x + w/2 < frame.shape[1]/2:
-            paddle_speed = 8
+            paddle_speed = 10
         elif x + w/2 > frame.shape[1]/2:
-            paddle_speed = -8
+            paddle_speed = -10
 
 
     cv2.imshow('frame',resize_frame)
