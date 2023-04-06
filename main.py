@@ -54,11 +54,10 @@ for row in range(BLOCK_ROWS):
         block_color = BLOCK_COLORS[row]
         blocks[row].append((block_x, block_y, block_color))
 
-# Boucle principale du jeu
 ball_x = WIDTH / 2
 ball_y = HEIGHT / 2
-ball_speed_x = random.choice([-5, 5])
-ball_speed_y = 3
+ball_speed_x = random.choice([-7, 7])
+ball_speed_y = 4
 paddle_x = WIDTH / 2 - PADDLE_WIDTH / 2
 paddle_speed = 0
 
@@ -69,8 +68,8 @@ w = 0
 # charger le fichier XML contenant les informations sur les visages
 face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
 eye_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_eye.xml')
-
 running = True
+# Boucle principale du jeu
 while running:
 
     ret, frame = cap.read()
