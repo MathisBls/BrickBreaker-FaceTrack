@@ -36,7 +36,7 @@ def no_button():
     fenetre.destroy()
 
 fenetre = Tk()
-fenetre.title("Choix de la reconnaissance faciale")
+fenetre.title("Menu Brick Breaker")
 fenetre.geometry("800x600") # Définition des dimensions de la fenêtre
 
 # Ajout d'une icône pour la fenêtre
@@ -155,9 +155,9 @@ while running:
             running = False
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
-                paddle_speed = -30
+                paddle_speed = -10
             elif event.key == pygame.K_RIGHT:
-                paddle_speed = 30
+                paddle_speed = 10
 
     if  controller == False:
         if x + w/2 < frame.shape[1]/2:
