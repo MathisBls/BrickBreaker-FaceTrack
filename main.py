@@ -4,6 +4,11 @@ import cv2
 import sys
 from tkinter import *
 
+# text
+pygame.font.init()
+myfont = pygame.font.SysFont('Comic Sans MS', 30)
+
+
 # Initialisation de pygame
 pygame.init()
 controller = False
@@ -71,9 +76,12 @@ def draw_paddle(paddle_x):
 def draw_block(block_x, block_y, block_color):
     pygame.draw.rect(screen, block_color, (int(block_x), int(block_y), BLOCK_WIDTH, BLOCK_HEIGHT))
 
-def collision(ball_x, ball_y, paddle_x, blocks):
+def collision(ball_x, ball_y, paddle_x, blocks, ball_speed_x, ball_speed_y):
     if ball_y + BALL_RADIUS >= HEIGHT - PADDLE_HEIGHT and ball_x >= paddle_x and ball_x <= paddle_x + PADDLE_WIDTH:
-        return True
+        ball_speed_y = -ball_speed_y
+        ball_speed_x += random.uniform(-1, 1)
+        ball_speed_y += random.uniform(-1, 1)
+        return True, ball_speed_x, ball_speed_y
     for row in range(BLOCK_ROWS):
         for col in range(BLOCK_COLS):
             block = blocks[row][col]
@@ -81,8 +89,12 @@ def collision(ball_x, ball_y, paddle_x, blocks):
                 block_x, block_y, block_color = block
                 if ball_x + BALL_RADIUS >= block_x and ball_x - BALL_RADIUS <= block_x + BLOCK_WIDTH and ball_y + BALL_RADIUS >= block_y and ball_y - BALL_RADIUS <= block_y + BLOCK_HEIGHT:
                     blocks[row][col] = None
-                    return True
-    return False
+                    ball_speed_y = -ball_speed_y
+                    ball_speed_x += random.uniform(-1, 1)
+                    ball_speed_y += random.uniform(-1, 1)
+                    return True, ball_speed_x, ball_speed_y
+    return False, ball_speed_x, ball_speed_y
+
 
 # Création des blocs
 blocks = []
@@ -96,8 +108,8 @@ for row in range(BLOCK_ROWS):
 
 ball_x = WIDTH / 2
 ball_y = HEIGHT / 2
-ball_speed_x = random.choice([-7, 7])
-ball_speed_y = 4
+ball_speed_x = random.choice([-6, 6])
+ball_speed_y = 3
 paddle_x = WIDTH / 2 - PADDLE_WIDTH / 2
 paddle_speed = 0
 cap = cv2.VideoCapture(0)
@@ -111,6 +123,10 @@ eye_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_eye.xml
 running = True
 # Boucle principale du jeu
 while running:
+
+    hit, ball_speed_x, ball_speed_y = collision(ball_x, ball_y, paddle_x, blocks, ball_speed_x, ball_speed_y)
+
+
     ret, frame = cap.read()
 
     resize_frame = cv2.resize(frame, (WIDTH//2, HEIGHT//2))
@@ -169,8 +185,10 @@ while running:
     elif ball_y > HEIGHT - BALL_RADIUS:
         running = False
 
-    if collision(ball_x, ball_y, paddle_x, blocks):
-        ball_speed_y *= -1
+    if hit:
+        ball_speed_x = max(min(ball_speed_x, 5), -5)  # limiter la vitesse de la balle
+    ball_x += ball_speed_x
+    ball_y += ball_speed_y
 
 # place la camera en bas a gauche
     cv2.moveWindow('frame', 0, 0)
@@ -187,6 +205,9 @@ while running:
                 draw_block(block_x, block_y, block_color)
     pygame.display.flip()
 
+    if all(block is None for row in blocks for block in row):
+        print("You win!")
+        running = False
 
 cap.release()
 cv2.destroyAllWindows()
