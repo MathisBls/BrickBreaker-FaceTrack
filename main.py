@@ -108,7 +108,7 @@ for row in range(BLOCK_ROWS):
 
 ball_x = WIDTH / 2
 ball_y = HEIGHT / 2
-ball_speed_x = random.choice([-6, 6])
+ball_speed_x = random.choice([-5, 5])
 ball_speed_y = 3
 paddle_x = WIDTH / 2 - PADDLE_WIDTH / 2
 paddle_speed = 0
