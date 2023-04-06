@@ -4,11 +4,6 @@ import cv2
 import sys
 from tkinter import *
 
-# text
-pygame.font.init()
-myfont = pygame.font.SysFont('Comic Sans MS', 30)
-
-
 # Initialisation de pygame
 pygame.init()
 controller = False
