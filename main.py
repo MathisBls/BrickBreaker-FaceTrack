@@ -5,7 +5,6 @@ import cv2
 # Initialisation de pygame
 pygame.init()
 
-# Définition des variables de jeu
 WIDTH = 800
 HEIGHT = 600
 BALL_RADIUS = 10
@@ -33,17 +32,14 @@ def draw_block(block_x, block_y, block_color):
     pygame.draw.rect(screen, block_color, (int(block_x), int(block_y), BLOCK_WIDTH, BLOCK_HEIGHT))
 
 def collision(ball_x, ball_y, paddle_x, blocks):
-    # Vérification de la collision avec le paddle
     if ball_y + BALL_RADIUS >= HEIGHT - PADDLE_HEIGHT and ball_x >= paddle_x and ball_x <= paddle_x + PADDLE_WIDTH:
         return True
-    # Vérification de la collision avec les blocs
     for row in range(BLOCK_ROWS):
         for col in range(BLOCK_COLS):
             block = blocks[row][col]
             if block is not None:
                 block_x, block_y, block_color = block
                 if ball_x + BALL_RADIUS >= block_x and ball_x - BALL_RADIUS <= block_x + BLOCK_WIDTH and ball_y + BALL_RADIUS >= block_y and ball_y - BALL_RADIUS <= block_y + BLOCK_HEIGHT:
-                    # Disparition du block touché
                     blocks[row][col] = None
                     return True
     return False
@@ -90,7 +86,6 @@ while running:
     for (x,y,w,h) in faces:
         cv2.rectangle(frame,(x,y),(x+w,y+h),(255,0,0),2)
         
-# detecte si ma tete est vers la gauche ou vers la droite
         roi_gray = gray[y:y+h, x:x+w]
         roi_color = frame[y:y+h, x:x+w]
         eyes = eye_cascade.detectMultiScale(roi_gray)
@@ -98,7 +93,6 @@ while running:
             cv2.rectangle(roi_color,(ex,ey),(ex+ew,ey+eh),(0,255,0),2)
     
     
-    # Gestion des événements
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -111,7 +105,6 @@ while running:
     cv2.imshow('frame',resize_frame)
 
 
-    # Mise à jour de la position du paddle
     paddle_x += paddle_speed
     if paddle_x < 0:
         paddle_x = 0
@@ -128,7 +121,6 @@ while running:
     elif ball_y > HEIGHT - BALL_RADIUS:
         running = False
 
-    # Vérification de la collision
     if collision(ball_x, ball_y, paddle_x, blocks):
         ball_speed_y *= -1
         
