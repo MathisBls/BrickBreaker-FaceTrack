@@ -1,9 +1,12 @@
 import pygame
 import random
 import cv2
+import sys
+from tkinter import *
 
 # Initialisation de pygame
 pygame.init()
+controller = False
 
 WIDTH = 800
 HEIGHT = 600
@@ -16,6 +19,43 @@ BLOCK_MARGIN = 10
 BLOCK_ROWS = 5
 BLOCK_COLS = 10
 BLOCK_COLORS = [(255, 0, 0), (255, 128, 0), (255, 255, 0), (128, 255, 0), (0, 255, 0)]
+
+def yes_button():
+    global controller
+    controller = False
+    fenetre.destroy()
+
+def no_button():
+    global controller
+    controller = True
+    fenetre.destroy()
+
+fenetre = Tk()
+fenetre.title("Choix de la reconnaissance faciale")
+fenetre.geometry("800x600") # Définition des dimensions de la fenêtre
+
+# Ajout d'une icône pour la fenêtre
+fenetre.iconbitmap("images/games.png")
+
+# Ajout d'un fond d'écran pour la fenêtre
+bg_image = PhotoImage(file="images/background.png")
+background_label = Label(fenetre, image=bg_image)
+background_label.place(x=0, y=0, relwidth=1, relheight=1)
+
+# Titre de la fenêtre
+title_label = Label(fenetre, text="Voulez-vous utiliser la reconnaissance faciale ?", font=("Helvetica", 18), fg="white", bg="#2b2d42")
+title_label.pack(pady=20)
+
+# Boutons "Oui" et "Non"
+button_frame = Frame(fenetre, bg="#2b2d42")
+button_frame.pack(side=BOTTOM, pady=20)
+yes_button = Button(button_frame, text="Oui", width=10, font=("Helvetica", 14), bg="#8d99ae", fg="white", bd=0, command=yes_button)
+yes_button.pack(side=LEFT, padx=30)
+no_button = Button(button_frame, text="Non", width=10, font=("Helvetica", 14), bg="#8d99ae", fg="white", bd=0, command=no_button)
+no_button.pack(side=RIGHT, padx=30)
+
+# Lancement de la fenêtre
+fenetre.mainloop()
 
 # Création de la fenêtre de jeu
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -60,10 +100,10 @@ ball_speed_x = random.choice([-7, 7])
 ball_speed_y = 4
 paddle_x = WIDTH / 2 - PADDLE_WIDTH / 2
 paddle_speed = 0
-
 cap = cv2.VideoCapture(0)
 x = 0
 w = 0
+
 
 # charger le fichier XML contenant les informations sur les visages
 face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
@@ -71,8 +111,8 @@ eye_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_eye.xml
 running = True
 # Boucle principale du jeu
 while running:
-
     ret, frame = cap.read()
+
     resize_frame = cv2.resize(frame, (WIDTH//2, HEIGHT//2))
 
     # convertir l'image en noir et blanc
@@ -97,11 +137,18 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT:
+                paddle_speed = -8
+            elif event.key == pygame.K_RIGHT:
+                paddle_speed = 8
 
-    if x + w/2 < frame.shape[1]/2:
-        paddle_speed = 8
-    elif x + w/2 > frame.shape[1]/2:
-        paddle_speed = -8
+    if  controller == False:
+        if x + w/2 < frame.shape[1]/2:
+            paddle_speed = 8
+        elif x + w/2 > frame.shape[1]/2:
+            paddle_speed = -8
+
 
     cv2.imshow('frame',resize_frame)
 
@@ -139,6 +186,8 @@ while running:
                 block_x, block_y, block_color = block
                 draw_block(block_x, block_y, block_color)
     pygame.display.flip()
+
+
 cap.release()
 cv2.destroyAllWindows()
 cv2.waitKey(0)
