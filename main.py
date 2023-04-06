@@ -57,8 +57,8 @@ for row in range(BLOCK_ROWS):
 # Boucle principale du jeu
 ball_x = WIDTH / 2
 ball_y = HEIGHT / 2
-ball_speed_x = random.choice([-2, 5])
-ball_speed_y = 2
+ball_speed_x = random.choice([-5, 5])
+ball_speed_y = 3
 paddle_x = WIDTH / 2 - PADDLE_WIDTH / 2
 paddle_speed = 0
 
@@ -72,7 +72,7 @@ eye_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_eye.xml
 
 running = True
 while running:
-    
+
     ret, frame = cap.read()
     resize_frame = cv2.resize(frame, (WIDTH//2, HEIGHT//2))
 
@@ -80,28 +80,30 @@ while running:
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
     # détecter les visages dans l'image
-    faces = face_cascade.detectMultiScale(gray, 1.3, 5)    
+    faces = face_cascade.detectMultiScale(gray, 1.3, 5)
+    faces = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5)
+
 
     # dessiner un rectangle autour de chaque visage détecté
     for (x,y,w,h) in faces:
         cv2.rectangle(frame,(x,y),(x+w,y+h),(255,0,0),2)
-        
+
         roi_gray = gray[y:y+h, x:x+w]
         roi_color = frame[y:y+h, x:x+w]
         eyes = eye_cascade.detectMultiScale(roi_gray)
         for (ex,ey,ew,eh) in eyes:
             cv2.rectangle(roi_color,(ex,ey),(ex+ew,ey+eh),(0,255,0),2)
-    
-    
+
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-    
+
     if x + w/2 < frame.shape[1]/2:
-        paddle_speed = 5
+        paddle_speed = 8
     elif x + w/2 > frame.shape[1]/2:
-        paddle_speed = -5
-                
+        paddle_speed = -8
+
     cv2.imshow('frame',resize_frame)
 
 
@@ -109,7 +111,7 @@ while running:
     if paddle_x < 0:
         paddle_x = 0
     elif paddle_x > WIDTH - PADDLE_WIDTH:
-        paddle_x = WIDTH - PADDLE_WIDTH 
+        paddle_x = WIDTH - PADDLE_WIDTH
 
     # Mise à jour de la position de la balle
     ball_x += ball_speed_x
@@ -123,10 +125,10 @@ while running:
 
     if collision(ball_x, ball_y, paddle_x, blocks):
         ball_speed_y *= -1
-        
+
 # place la camera en bas a gauche
     cv2.moveWindow('frame', 0, 0)
-    
+
     # Affichage
     screen.fill((0, 0, 0))
     draw_ball(ball_x, ball_y)
@@ -140,5 +142,5 @@ while running:
     pygame.display.flip()
 cap.release()
 cv2.destroyAllWindows()
+cv2.waitKey(0)
 pygame.quit()
-    
