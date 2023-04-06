@@ -43,11 +43,11 @@ background_label = Label(fenetre, image=bg_image)
 background_label.place(x=0, y=0, relwidth=1, relheight=1)
 
 # Titre de la fenêtre
-title_label = Label(fenetre, text="Voulez-vous utiliser la reconnaissance faciale ?", font=("Helvetica", 18), fg="white", bg="#2b2d42")
+title_label = Label(fenetre, text="Voulez-vous utiliser la reconnaissance faciale ?", font=("Helvetica", 18), fg="white", bg="#974590")
 title_label.pack(pady=20)
 
 # Boutons "Oui" et "Non"
-button_frame = Frame(fenetre, bg="#2b2d42")
+button_frame = Frame(fenetre, bg="#974590")
 button_frame.pack(side=BOTTOM, pady=20)
 yes_button = Button(button_frame, text="Oui", width=10, font=("Helvetica", 14), bg="#8d99ae", fg="white", bd=0, command=yes_button)
 yes_button.pack(side=LEFT, padx=30)
